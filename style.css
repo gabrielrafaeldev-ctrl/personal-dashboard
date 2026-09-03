@@ -1,0 +1,42 @@
+button{
+  font-size: 100px;
+  background-color: blue;
+  width: 400px;
+  height: 100px;
+  border-radius: 20px;
+  padding: 5px;
+
+
+}
+
+button:hover{
+  background-color: red;
+}
+
+
+.finance{
+  width: 710px;
+  white-space: nowrap;
+  height: 120px;
+  background-color: black;
+  border: 2px solid gold;
+  color: white;
+}
+
+.finance:hover {
+  font-size: 0;
+  background-color: green;
+  color: white
+
+}
+
+.finance:hover::after{
+  content:  "💵";
+  font-size: 70px;
+}
+
+
+form {
+  display: flex;
+  flex-direction: column;
+}
