@@ -95,3 +95,10 @@ createCategory.addEventListener("click", () => {
 
 //loading categories from local storage
 const savedCategories = JSON.parse(localStorage.getItem("categories")) || [];
+
+//displaying buttons when page is loaded
+for(const category of savedCategories){
+  createButton(category.name, category.url);
+
+}
+
