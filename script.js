@@ -17,7 +17,7 @@ function createButton(label, url) {
 
 }
 
-createButton("Chess", "https://www.youtube.com/watch?v=ylpAHvPlafc&list=PLRYw2W3Uwbgs")
+//createButton("Chess", "https://www.youtube.com/watch?v=ylpAHvPlafc&list=PLRYw2W3Uwbgs")
 
 
 
@@ -64,37 +64,27 @@ createCategory.addEventListener("click", () => {
     const categoryName = input.value;
     const url = urlInput.value;
 
-    console.log(categoryName);
-    console.log(url);
+    categories.push({name: categoryName, url: url});
+
+    localStorage.setItem("categories", JSON.stringify(categories));
 
     createButton(categoryName, url);
 
-    console.log("before remove;", newForm.isConnected);
-
     newForm.remove();
 
-    console.log("after remove;", newForm.isConnected);
   })
 
 })
 
 
-const categories = [];
-
-//Saving categories to local storage
-createCategory.addEventListener("click", () => {
-  categories.push({name: categoryName, url: url});
 
 
-  localStorage.setItem("categories", JSON.stringify(categories));
 
-
-   
-})
 
 
 //loading categories from local storage
 const savedCategories = JSON.parse(localStorage.getItem("categories")) || [];
+const categories = savedCategories;
 
 //displaying buttons when page is loaded
 for(const category of savedCategories){
