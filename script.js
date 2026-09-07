@@ -3,17 +3,37 @@ function goTo(URL) {
 
 }
 
-
+//function to create a buttton with a label and a url   and delete button to delete the button and remove it from local storage
 function createButton(label, url) {
   const newButton = document.createElement("button");
+  const categoryContainer = document.createElement("div")
 
   
   newButton.addEventListener("click", () => {
     window.location.href = url;
   })
+  
 
   newButton.textContent = label;
-  document.body.append(newButton);
+  categoryContainer.append(newButton);
+
+  const deleteButton= document.createElement("button");
+  deleteButton.textContent = "Delete";
+
+  categoryContainer.append(deleteButton);
+
+  document.body.append(categoryContainer);
+
+  deleteButton.addEventListener("click", () => {
+    categoryContainer.remove();
+    //remove from local storage
+
+    categories = categories.filter(category => category.name !== label);
+    localStorage.setItem("categories", JSON.stringify(categories));
+  })
+
+
+
 
 }
 
@@ -84,7 +104,7 @@ createCategory.addEventListener("click", () => {
 
 //loading categories from local storage
 const savedCategories = JSON.parse(localStorage.getItem("categories")) || [];
-const categories = savedCategories;
+let categories = savedCategories;
 
 //displaying buttons when page is loaded
 for(const category of savedCategories){
