@@ -112,3 +112,27 @@ for(const category of savedCategories){
 
 }
 
+
+
+const enterButton = document.querySelector("#enterButton");
+const welcomeScreen = document.querySelector("#welcomeScreen");
+const nameInput = document.querySelector("#nameInput");
+
+//welcome screen adding functionality to the welcome screen  html elements
+enterButton.addEventListener("click", () => {
+  dashboard.style.display = "block";
+
+  welcomeScreen.style.display = "none";
+
+  const  WelcomeScreenInput = nameInput.value;
+
+  localStorage.setItem("userName", WelcomeScreenInput);
+})
+
+
+
+const dashboard = document.querySelector("#dashboard");
+
+dashboard.style.display = "none";
+
+
