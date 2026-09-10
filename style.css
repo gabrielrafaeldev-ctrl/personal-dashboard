@@ -58,6 +58,27 @@ form {
 
 }
 
+/*animation for the welcome screen*/
+
+#welcomeMessage {
+  opacity: 0;
+
+}
+
+.welcomeAnimation {
+  animation: welcomeFade 2s ease-in forwards;
+}
+
+@keyframes welcomeFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 body {
   margin: 0;
 }

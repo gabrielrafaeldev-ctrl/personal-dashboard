@@ -113,10 +113,11 @@ for(const category of savedCategories){
 }
 
 
-
+//DOM references
 const enterButton = document.querySelector("#enterButton");
 const welcomeScreen = document.querySelector("#welcomeScreen");
 const nameInput = document.querySelector("#nameInput");
+const welcomeMessage = document.querySelector("#welcomeMessage");
 
 //welcome screen adding functionality to the welcome screen  html elements
 enterButton.addEventListener("click", () => {
@@ -124,9 +125,13 @@ enterButton.addEventListener("click", () => {
 
   welcomeScreen.style.display = "none";
 
-  const  WelcomeScreenInput = nameInput.value;
+  const  welcomeScreenInput = nameInput.value;
 
-  localStorage.setItem("userName", WelcomeScreenInput);
+  localStorage.setItem("userName", welcomeScreenInput);
+
+  welcomeMessage.textContent = `Welcome, ${welcomeScreenInput}!`;
+
+  welcomeMessage.classList.add("welcomeAnimation");
 })
 
 
