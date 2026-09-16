@@ -118,26 +118,49 @@ const enterButton = document.querySelector("#enterButton");
 const welcomeScreen = document.querySelector("#welcomeScreen");
 const nameInput = document.querySelector("#nameInput");
 const welcomeMessage = document.querySelector("#welcomeMessage");
+const nameQuestion = document.querySelector("#nameQuestion");
+const dashboard  = document.querySelector("#dashboard");
 
 //welcome screen adding functionality to the welcome screen  html elements
+//start the welcome sequence when the enter button is clicked 
 enterButton.addEventListener("click", () => {
-  dashboard.style.display = "block";
-
-  welcomeScreen.style.display = "none";
 
   const  welcomeScreenInput = nameInput.value;
 
-  localStorage.setItem("userName", welcomeScreenInput);
+  const welcomeText = welcomeMessage.textContent = `welcome Mister , ${welcomeScreenInput}!`;
 
-  welcomeMessage.textContent = `Welcome, ${welcomeScreenInput}!`;
+  welcomeMessage.textContent = welcomeText;
 
   welcomeMessage.classList.add("welcomeAnimation");
+
+  localStorage.setItem("userName", welcomeScreenInput);
+
+  const speech =  new SpeechSynthesisUtterance(welcomeText);
+  speech.lang = "en-US";
+
+  speechSynthesis.speak(speech);
+
+  nameQuestion.style.display = "none";
+  nameInput.style.display = "none";
+  enterButton.style.display = "none";
+
+  welcomeMessage.classList.add("welcomeAnimation");
+
+  localStorage.setItem("userName", welcomeScreenInput);
+
+
+})
+
+
+//animation finishes 
+dashboard.style.display = "none";
+
+welcomeMessage.addEventListener("animationend", () => {
+  dashboard.style.display = "block";
 })
 
 
 
-const dashboard = document.querySelector("#dashboard");
 
-dashboard.style.display = "none";
 
 
