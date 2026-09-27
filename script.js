@@ -1,166 +1,137 @@
-function goTo(URL) {
-  window.location.href = URL;
-
-}
-
-//function to create a buttton with a label and a url   and delete button to delete the button and remove it from local storage
-function createButton(label, url) {
-  const newButton = document.createElement("button");
-  const categoryContainer = document.createElement("div")
-
-  
-  newButton.addEventListener("click", () => {
-    window.location.href = url;
-  })
-  
-
-  newButton.textContent = label;
-  categoryContainer.append(newButton);
-
-  const deleteButton= document.createElement("button");
-  deleteButton.textContent = "Delete";
-
-  categoryContainer.append(deleteButton);
-
-  document.body.append(categoryContainer);
-
-  deleteButton.addEventListener("click", () => {
-    categoryContainer.remove();
-    //remove from local storage
-
-    categories = categories.filter(category => category.name !== label);
-    localStorage.setItem("categories", JSON.stringify(categories));
-  })
-
-
-
-
-}
-
-//createButton("Chess", "https://www.youtube.com/watch?v=ylpAHvPlafc&list=PLRYw2W3Uwbgs")
-
-
-
-const createCategory = document.querySelector("#createCategory");
-
-
-createCategory.addEventListener("click", () => {
-
-  console.log("Create button clicked")
-
-  const newForm = document.createElement("form");
-  document.body.append(newForm);
-
-  const input = document.createElement("input");
-  
-
-  const label = document.createElement("label");
-  label.textContent = "Category name:"
-  newForm.append(label);
-  newForm.append(input);
-
-  input.placeholder = "e.g chess";
-
-  const urlInput = document.createElement("input");
-  const youtubeLabel = document.createElement("label");
-
-  youtubeLabel.textContent = "Youtube Url:"
-
-  newForm.append(youtubeLabel);
-  newForm.append(urlInput);
-
-  urlInput.placeholder = "e.g Youtube URL";
-
-
-  const createButtonElement = document.createElement("button");
-
-  createButtonElement.type = "button";
-
-  createButtonElement.textContent = "Create";
-
-  newForm.append(createButtonElement);
-
-  createButtonElement.addEventListener("click", () => {
-    const categoryName = input.value;
-    const url = urlInput.value;
-
-    categories.push({name: categoryName, url: url});
-
-    localStorage.setItem("categories", JSON.stringify(categories));
-
-    createButton(categoryName, url);
-
-    newForm.remove();
-
-  })
-
-})
-
-
-
-
-
-
-
-//loading categories from local storage
-const savedCategories = JSON.parse(localStorage.getItem("categories")) || [];
-let categories = savedCategories;
-
-//displaying buttons when page is loaded
-for(const category of savedCategories){
-  createButton(category.name, category.url);
-
-}
-
-
-//DOM references
+/* =========================================================
+   DOM REFERENCES
+   ========================================================= */
 const enterButton = document.querySelector("#enterButton");
 const welcomeScreen = document.querySelector("#welcomeScreen");
 const nameInput = document.querySelector("#nameInput");
 const welcomeMessage = document.querySelector("#welcomeMessage");
 const nameQuestion = document.querySelector("#nameQuestion");
-const dashboard  = document.querySelector("#dashboard");
+const dashboard = document.querySelector("#dashboard");
+const speakButton = document.querySelector("#speakButton");
+const createCategoryBtn = document.querySelector("#createCategory");
 
-//welcome screen adding functionality to the welcome screen  html elements
-//start the welcome sequence when the enter button is clicked 
-enterButton.addEventListener("click", () => {
+// This holds whatever text was last spoken/shown, so the speak
+// button can repeat it later.
+let welcomeText = "";
 
-  const  welcomeScreenInput = nameInput.value;
 
-  const welcomeText = welcomeMessage.textContent = `welcome Mister , ${welcomeScreenInput}!`;
+/* =========================================================
+   CATEGORIES  (create / display / delete)
+   ========================================================= */
 
-  welcomeMessage.textContent = welcomeText;
+// Load saved categories once, at the top — single source of truth.
+let categories = JSON.parse(localStorage.getItem("categories")) || [];
 
+function saveCategories() {
+  localStorage.setItem("categories", JSON.stringify(categories));
+}
+
+function goTo(url) {
+  window.location.href = url;
+}
+
+// Creates one category "card" (button + delete button) and appends it.
+function createCategoryButton(label, url) {
+  const categoryContainer = document.createElement("div");
+
+  const newButton = document.createElement("button");
+  newButton.textContent = label;
+  newButton.addEventListener("click", () => goTo(url));
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "Delete";
+  deleteButton.addEventListener("click", () => {
+    categoryContainer.remove();
+
+    categories = categories.filter((category) => category.name !== label);
+    saveCategories();
+  });
+
+  categoryContainer.append(newButton, deleteButton);
+  document.body.append(categoryContainer);
+}
+
+// Render every saved category on page load.
+for (const category of categories) {
+  createCategoryButton(category.name, category.url);
+}
+
+// "+ Create Category" button -> builds a small inline form.
+createCategoryBtn.addEventListener("click", () => {
+  const newForm = document.createElement("form");
+
+  const nameLabel = document.createElement("label");
+  nameLabel.textContent = "Category name:";
+  const nameField = document.createElement("input");
+  nameField.placeholder = "e.g chess";
+
+  const urlLabel = document.createElement("label");
+  urlLabel.textContent = "Youtube Url:";
+  const urlField = document.createElement("input");
+  urlField.placeholder = "e.g Youtube URL";
+
+  const submitBtn = document.createElement("button");
+  submitBtn.type = "button"; // correct — stops it submitting/reloading the page
+  submitBtn.textContent = "Create";
+
+  submitBtn.addEventListener("click", () => {
+    const categoryName = nameField.value.trim();
+    const url = urlField.value.trim();
+
+    
+
+    categories.push({ name: categoryName, url });
+    saveCategories();
+    createCategoryButton(categoryName, url);
+    newForm.remove();
+  });
+
+  newForm.append(nameLabel, nameField, urlLabel, urlField, submitBtn);
+  document.body.append(newForm);
+});
+
+
+/* =========================================================
+   WELCOME SCREEN
+   ========================================================= */
+
+function showWelcomeMessage(text) {
+  welcomeText = text;
+  welcomeMessage.textContent = text;
   welcomeMessage.classList.add("welcomeAnimation");
-
-  localStorage.setItem("userName", welcomeScreenInput);
-
-  const speech =  new SpeechSynthesisUtterance(welcomeText);
-  speech.lang = "en-US";
-
-  speechSynthesis.speak(speech);
 
   nameQuestion.style.display = "none";
   nameInput.style.display = "none";
   enterButton.style.display = "none";
 
-  welcomeMessage.classList.add("welcomeAnimation");
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "en-US";
+  speechSynthesis.speak(speech);
+}
 
-  localStorage.setItem("userName", welcomeScreenInput);
-
-
-})
-
-
-//animation finishes 
+// Dashboard is hidden until the welcome animation finishes.
 dashboard.style.display = "none";
-
 welcomeMessage.addEventListener("animationend", () => {
   dashboard.style.display = "block";
-})
+  welcomeScreen.style.display = "none";
+});
 
+// First-time visitor: they type a name and press Enter.
+enterButton.addEventListener("click", () => {
+  const typedName = nameInput.value;
+  localStorage.setItem("userName", typedName);
+  showWelcomeMessage(`welcome Mister, ${typedName}!`);
+});
 
+// Returning visitor: greet them using the name already saved.
+const savedUserName = localStorage.getItem("userName");
+if (savedUserName) {
+  showWelcomeMessage(`Welcome back Mister, ${savedUserName}!`);
+}
 
-
-
-
+// Speak button repeats whatever the last welcome text was.
+speakButton.addEventListener("click", () => {
+  const speech = new SpeechSynthesisUtterance(welcomeText);
+  speech.lang = "en-US";
+  speechSynthesis.speak(speech);
+});
