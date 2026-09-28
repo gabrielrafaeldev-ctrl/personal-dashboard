@@ -135,3 +135,16 @@ speakButton.addEventListener("click", () => {
   speech.lang = "en-US";
   speechSynthesis.speak(speech);
 });
+
+
+
+
+
+//audio buttons 
+const clickSound = new Audio("sounds/universfield-ui-button-click-147358.mp3");
+
+document.addEventListener("click", (event) => {
+  if(event.target.tagName === "BUTTON") {
+    clickSound.play();
+  }
+});
